@@ -1,0 +1,22 @@
+name: Compliance Guardrail Check
+
+on:
+  pull_request:
+    paths:
+      - "example_problem/**"
+
+jobs:
+  policy-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # This is the exact same script and exact same invocation the agent
+      # harness runs locally. There is no separate "CI version" of the
+      # rules — one scanner, one source of truth, checked in both places.
+      - name: Run compliance guardrail scan
+        run: python3 policy_check.py example_problem/main.tf
